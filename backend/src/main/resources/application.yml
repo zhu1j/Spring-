@@ -1,0 +1,59 @@
+# ============================================================
+# 跨境电商客户资料管理系统 - 应用配置
+# ============================================================
+
+server:
+  port: 8080
+  servlet:
+    context-path: /
+
+spring:
+  application:
+    name: crm-backend
+
+  # ---- 数据源配置 ----
+  datasource:
+    url: jdbc:mysql://localhost:3306/crm_db?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      minimum-idle: 5
+      maximum-pool-size: 20
+      idle-timeout: 300000
+      max-lifetime: 600000
+      connection-timeout: 30000
+
+  # ---- Jackson JSON 配置 ----
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+    default-property-inclusion: non_null
+
+# ---- MyBatis-Plus 配置 ----
+mybatis-plus:
+  # 实体类扫描路径
+  type-aliases-package: com.crm.entity
+  # XML 映射文件路径（本项目使用注解方式，无 XML）
+  # mapper-locations: classpath*:/mapper/**/*.xml
+  configuration:
+    # 下划线转驼峰
+    map-underscore-to-camel-case: true
+    # SQL 日志（开发环境建议开启，生产环境需关闭）
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      # 逻辑删除字段
+      logic-delete-field: isDeleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+      # 主键类型：自增
+      id-type: auto
+      # 表名前缀（如有需要）
+      # table-prefix: t_
+
+# ---- 日志配置 ----
+logging:
+  level:
+    com.crm: debug
+    org.springframework: info

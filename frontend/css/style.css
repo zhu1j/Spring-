@@ -1,0 +1,156 @@
+/* ============================================================
+ * 跨境电商客户资料管理系统 - 自定义样式
+ * ============================================================ */
+
+/* ---- 全局 ---- */
+body {
+    background-color: #f5f7fa;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                 "Microsoft YaHei", "Helvetica Neue", sans-serif;
+}
+
+/* ---- 导航栏 ---- */
+.navbar-brand {
+    letter-spacing: 1px;
+}
+
+/* ---- 表格优化 ---- */
+.table th {
+    white-space: nowrap;
+    font-size: 0.85rem;
+    vertical-align: middle;
+}
+
+.table td {
+    vertical-align: middle;
+    font-size: 0.85rem;
+}
+
+/* 状态标签 */
+.status-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.status-潜在客户  { background-color: #e3f2fd; color: #1565c0; }
+.status-初步接洽  { background-color: #fff3e0; color: #e65100; }
+.status-意向明确  { background-color: #e8f5e9; color: #2e7d32; }
+.status-已签约    { background-color: #c8e6c9; color: #1b5e20; font-weight: bold; }
+.status-已流失    { background-color: #ffebee; color: #b71c1c; }
+
+/* 客户类型标签 */
+.type-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    background-color: #ede7f6;
+    color: #4527a0;
+}
+
+/* ---- 表格行悬浮高亮 ---- */
+.table-hover tbody tr {
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.table-hover tbody tr:hover {
+    background-color: #e8f4fd !important;
+}
+
+/* ---- 卡片阴影 ---- */
+.card {
+    border: none;
+    border-radius: 8px;
+}
+
+/* ---- 分页 ---- */
+.pagination .page-link {
+    cursor: pointer;
+    border-radius: 4px;
+    margin: 0 2px;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}
+
+/* ---- 模态框 ---- */
+.modal-header {
+    border-bottom: none;
+}
+
+.modal-footer {
+    border-top: none;
+}
+
+.modal-content {
+    border: none;
+    border-radius: 10px;
+}
+
+/* ---- 表单 ---- */
+.form-label {
+    font-weight: 500;
+    font-size: 0.85rem;
+    margin-bottom: 0.25rem;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
+}
+
+/* ---- 按钮间距 ---- */
+.btn + .btn {
+    margin-left: 0;
+}
+
+/* ---- 响应式优化 ---- */
+@media (max-width: 768px) {
+    .table th, .table td {
+        font-size: 0.78rem;
+        padding: 0.4rem;
+    }
+
+    .navbar-brand {
+        font-size: 1rem;
+    }
+}
+
+/* ---- 加载动画 ---- */
+.loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+/* ---- 详情模态框内容 ---- */
+.detail-label {
+    font-weight: 600;
+    color: #666;
+    font-size: 0.8rem;
+    margin-bottom: 0.15rem;
+}
+
+.detail-value {
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 0.8rem;
+}
+
+/* ---- 空状态 ---- */
+.empty-state {
+    text-align: center;
+    padding: 3rem 0;
+    color: #999;
+}
+
+/* ---- Toast 容器 ---- */
+#toastContainer {
+    z-index: 9999;
+}

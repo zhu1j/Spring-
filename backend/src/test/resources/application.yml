@@ -1,0 +1,56 @@
+# ============================================================
+# 测试环境配置 — 使用 H2 内存数据库，无需 MySQL
+# ============================================================
+
+server:
+  port: 0   # 随机端口，避免冲突
+
+spring:
+  application:
+    name: crm-backend-test
+
+  # ---- H2 内存数据库 ----
+  datasource:
+    url: jdbc:h2:mem:crm_test;MODE=MySQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+    hikari:
+      minimum-idle: 1
+      maximum-pool-size: 5
+
+  # 初始化 SQL 脚本
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:schema-h2.sql
+
+  # ---- Jackson 配置 ----
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+    default-property-inclusion: non_null
+
+  # 关闭 H2 控制台
+  h2:
+    console:
+      enabled: false
+
+# ---- MyBatis-Plus 配置 ----
+mybatis-plus:
+  type-aliases-package: com.crm.entity
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      logic-delete-field: isDeleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+      id-type: auto
+
+# ---- 日志 ----
+logging:
+  level:
+    com.crm: debug
+    org.springframework: warn
