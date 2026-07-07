@@ -1,0 +1,11 @@
+com\crm\dto\CustomerQueryDTO.class
+com\crm\service\CustomerService.class
+com\crm\entity\Customer.class
+com\crm\dto\Result$ResultBuilder.class
+com\crm\entity\Customer$CustomerBuilder.class
+com\crm\dto\Result.class
+com\crm\config\MyBatisPlusConfig.class
+com\crm\CrmApplication.class
+com\crm\service\impl\CustomerServiceImpl.class
+com\crm\util\ExcelUtil.class
+com\crm\mapper\CustomerMapper.class
