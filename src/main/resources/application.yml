@@ -11,14 +11,14 @@ spring:
     name: crm-backend
 # H2虚拟库：url: jdbc:h2:mem:crm_test;DB_CLOSE_DELAY=-1;MODE=MySQL
   datasource:
-#    url: jdbc:mysql://localhost:3306/crm_db?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true
-#    username: root
-#    password: root
-#    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:h2:mem:crm_test;DB_CLOSE_DELAY=-1;MODE=MySQL
-    username: sa
-    password:
-    driver-class-name: org.h2.Driver
+    url: jdbc:mysql://localhost:3306/crm_db?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:h2:mem:crm_test;DB_CLOSE_DELAY=-1;MODE=MySQL
+#    username: sa
+#    password:
+#    driver-class-name: org.h2.Driver
 
     hikari:
       minimum-idle: 5

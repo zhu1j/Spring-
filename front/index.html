@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>跨境电商客户资料管理系统</title>
+        <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.bootcdn.net/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- 自定义样式 -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- ==================== 顶部导航栏 ==================== -->
+     <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" href="#">
+                <i class="bi bi-people-fill me-2"></i>CRM 客户资料管理系统
+            </a>
+            <div class="d-flex">
+                <button class="btn btn-light btn-sm me-2" onclick="openSharePage()" title="共享浏览">
+                    <i class="bi bi-share"></i> 共享浏览
+                </button>
+                <span class="navbar-text small d-done d-md-inline">
+                    跨境电商业务 v1.0
+                </span>
+            </div>
+        </div>
+     </nav>
+
+     <div class="container-fluid mt-3">
+        <div class="row">
+            <div class="col-12">
+                <!-- ==================== 筛选区域 ==================== -->
+                <div class="card mb-3 shadow-sm">
+                    <div class="card-body py-2">
+                        <form id="filterForm" class="row g-2 align-items-end">
+                            <div class="col-md-2 col-sm-4">
+                                <label class="form-label small mb-1">关键词</label>
+                                <input type="text" class="form-control form-control-sm" id="filterKeyword"
+                                        placeholder="公司名 / 联系人">
+                            </div>
+                            <div class="col-md-2 col-sm-4">
+                                <label class="form-label small mb-1">客户类型</label>
+                                <select class="form-select form-select-sm" id="filterType">
+                                    <option value="">全部</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2 col-sm-4">
+                                <label class="form-label" small mb-1>跟进状态</label>
+                                <select class="form-select form-select-sm" id="filterStatus">
+                                    <option value="">全部</option>
+                                    <option value="潜在客户">潜在客户</option>
+                                    <option value="初步接洽">初步接洽</option>
+                                    <option value="意向明确">意向明确</option>
+                                    <option value="已签约">已签约</option>
+                                    <option value="已流失">已流失</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2 col-sm-4">
+                                <label class="form-label small mb-1">国家/地区</label>
+                                <input type="text" class="form-control form-control-sm" id="filterCountry"
+                                placeholder="如：中国">
+                            </div>
+                            <div class="col-md-2 col-sm-6">
+                                <button type="button" class="btn btn-outline-secondary btn-sm w-100" onclick="resetFilter()">
+                                    <i class="bi bi-arrow-clockwise"></i> 重置
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- ==================== 操作按钮区 ==================== -->
+                 <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div>
+                        <button class="btn btn-success btn-sm " onclick="showCreateModal()">
+                            <i class="bi bi-plus-circle"></i> 新增客户
+                        </button>
+                        <button class="btn btn-outline-success btn-sm ms-2" onclick="exportExcel()">
+                            <i class="bi bi-file-earmark-excel"></i> 导出Excel
+                        </button>
+                    </div>
+                    <div class="text-muted small">
+                        共 <span id="totalCount" class="fw-bold text-primary">0</span> 条记录
+                    </div>
+                 </div>
+
+                 <!-- ==================== 客户列表表格 ==================== -->
+                  <div class="card shadow-sm">
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-striped mb-0">
+                                <thead class="table-primary">
+                                    <tr>
+                                        <th style="width: 50px;">#</th>
+                                        <th>公司名称</th>
+                                        <th>联系人</th>
+                                        <th>电话</th>
+                                        <th>国家/地区</th>
+                                        <th>客户类型</th>
+                                        <th>跟进状态</th>
+                                        <th>录入人</th>
+                                        <th>创建时间</th>
+                                        <th style="width: 160px;">操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="customerTableBody">
+                                    <tr>
+                                        <td colspan="10" class="text-center text-muted py-5">
+                                            <i class="bi bi-inbox" style="font-size: 3rem;"></i>
+                                            <p class="mt-2">暂无数据，请点击"新增客户"添加第一条记录</p>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                  </div>
+
+                  <!-- ==================== 分页 ==================== -->
+                   <div class="d-flex justify-content-between align-items-center mt-3">
+                    <div class="text-muted small">
+                        第 <span id="currentPage">1</span> / <span id="totalPages">1</span> 页
+                    </div>
+                    <nav>
+                        <ul class="pagination pagination-sm mb-0" id="pagination">
+                        </ul>
+                    </nav>
+                    <div>
+                        <select class="form-select form-select-sm" id="pageSizeSelect" onchange="changePageSize()">
+                            <option value="10">10条/页</option>
+                            <option value="20">20条/页</option>
+                            <option value="50">50条/页</option>
+                        </select>
+                    </div>
+                   </div>
+            </div>
+        </div>
+     </div>
+
+     <!-- ==================== 新增/编辑 模态框 ==================== -->
+      <div class="modal fade" id="customerModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5>
+                        <i class="bi bi-person-plus"></i> 新增客户
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="customerForm" novalidate>
+                        <input type="hidden" id="customerId">
+
+                        <!-- 基本信息 -->
+                         <h6 class="text-primary border-bottom pb-1 mb-3">
+                            <i class="bi bi-info-circle"></i> 基本信息
+                         </h6>
+                         <div class="row g-2">
+                            <div class="col-md-6">
+                                <label class="form-label">联系人 <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="companyName" required
+                                placeholder="请输入联系人姓名">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">联系电话</label>
+                                <input type="text" class="form-control" id="phone" placeholder="手机号或座机">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">邮箱</label>
+                                <input type="email" class="form-control" id="email" placeholder="example@mail.com">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">微信号</label>
+                                <input type="text" class="form-control" id="wechat" placeholder="微信号">
+                            </div>
+                         </div>
+                         <!-- 业务信息 -->
+                          <h6 class="text-primary border-bottom pb-1 mb-3 mt-3">
+                            <i class="bi bi-briefcase"></i> 业务信息
+                          </h6>
+                          <div class="row g-2">
+                            <div class="col-md-4">
+                                <label class="form-label">客户类型 <span class="text-danger">*</span></label>
+                                <select class="form-select" id="customerType" required>
+                                    <option value="">请选择</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">跟进状态</label>
+                                <select class="form-select" id="status">
+                                    <option value="潜在客户">潜在客户</option>
+                                    <option value="初步接洽">初步接洽</option>
+                                    <option value="意向明确">意向明确</option>
+                                    <option value="已签约">已签约</option>
+                                    <option value="已流失">已流失</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">客户来源</label>
+                                <input type="text" class="form-control" id="source"
+                                placeholder="如：展会、官网、朋友推荐">
+                            </div>
+                          </div>
+                          <!-- 地区信息 -->
+                           <h6 class="text-primary border-bottom pb-1 mb-3 mt-3">
+                            <i class="bi bi-geo-alt"></i> 地区信息
+                           </h6>
+                           <div class="row g-2">
+                            <div class="col-md-4">
+                                <label class="form-label">国家/地区</label>
+                                <input type="text" class="form-control" id="country" placeholder="如：中国">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">网站</label>
+                                <input type="text" class="form-control" id="website" placeholder="https://">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">录入人</label>
+                                <input type="text" class="form-control" id="createdBy" placeholder="录入人姓名">
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">地址</label>
+                                <input type="text" class="form-control" id="address" placeholder="详细地址">
+                            </div>
+                           </div>
+                           <!-- 服务需求与备注 -->
+                            <h6 class="text-primary border-bottom pb-1 mb-3 mt-3">
+                                <i class="bi bi-chat-dots"></i> 服务需求与备注
+                            </h6>
+                            <div class="row g-2">
+                                <div class="col-md-6">
+                                    <label class="form-label">服务需求</label>
+                                    <textarea class="form-label" id="serviceNeeds" rows="3"
+                                    placeholder="描述客户的具体服务需求..."></textarea>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">备注</label>
+                                    <textarea class="form-control" id="remark" rows="3"
+                                    placeholder="其他备注信息..."></textarea>
+                                </div>
+                            </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" onclick="submitForm()">
+                        <i class="bit-chek-lg"></i> 保存
+                    </button>
+                </div>
+            </div>
+        </div>
+      </div>
+
+    <!-- ==================== 查看详情 模态框 ==================== -->
+     <div class="modal fade" id="detailModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-info text-white">
+                    <h5><i class="bi bi-eye"></i> 客户详情</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="detailContent">
+                </div>
+            </div>
+        </div>
+     </div>
+
+     <!-- Bootstrap 5 JS -->
+      <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+      <!-- API 封装 -->
+       <script src="js/api.js"></script>
+       <!-- 主逻辑 -->
+        <script src="js/app.js"></script>
+</body>
+</html>
