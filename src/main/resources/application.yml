@@ -4,20 +4,30 @@ server:
     context-path: /
 
 spring:
+  sql:
+    init:
+      mode: always
   application:
     name: crm-backend
-
+# H2虚拟库：url: jdbc:h2:mem:crm_test;DB_CLOSE_DELAY=-1;MODE=MySQL
   datasource:
-    url: jdbc:mysql://localhost:3306/crm_db?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true
-    username: root
-    password: root
-    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://localhost:3306/crm_db?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true
+#    username: root
+#    password: root
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:h2:mem:crm_test;DB_CLOSE_DELAY=-1;MODE=MySQL
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+
     hikari:
       minimum-idle: 5
       maximum-pool-size: 20
       idle-timeout: 300000
       max-lifetime: 600000
       connection-timeout: 30000
+
+
 
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss

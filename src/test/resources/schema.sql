@@ -1,0 +1,20 @@
+CREATE TABLE IF NOT EXISTS customer (
+                                        id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                                        company_name VARCHAR(200) NOT NULL,
+    contact_person VARCHAR(100) NOT NULL,
+    phone VARCHAR(50),
+    email VARCHAR(100),
+    country VARCHAR(100),
+    address VARCHAR(500),
+    website VARCHAR(200),
+    wechat VARCHAR(100),
+    customer_type VARCHAR(50) NOT NULL,
+    service_needs TEXT,
+    source VARCHAR(100),
+    status VARCHAR(50),
+    remark TEXT,
+    created_by VARCHAR(100),
+    created_at TIMESTAMP,
+    updated_at TIMESTAMP,
+    is_deleted INT DEFAULT 0
+    );

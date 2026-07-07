@@ -22,7 +22,7 @@
 
     <!-- ========== 统一版本管理 ========== -->
     <properties>
-        <java.version>8</java.version>
+        <java.version>17</java.version>
         <mybatis-plus.version>3.5.5</mybatis-plus.version>
         <poi.version>5.2.5</poi.version>
         <hutool.version>5.8.25</hutool.version>
@@ -90,7 +90,7 @@
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <scope>test</scope>
+            <scope>runtime</scope>
         </dependency>
     </dependencies>
 
