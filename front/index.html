@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>跨境电商客户资料管理系统</title>
-        <!-- Bootstrap 5 CSS -->
-    <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap 5 CSS -->
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
-    <link href="https://cdn.bootcdn.net/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="bootstrap/css/bootstrap-icons.css" rel="stylesheet">
     <!-- 自定义样式 -->
     <link rel="stylesheet" href="css/style.css">
 </head>
@@ -23,7 +23,7 @@
                 <button class="btn btn-light btn-sm me-2" onclick="openSharePage()" title="共享浏览">
                     <i class="bi bi-share"></i> 共享浏览
                 </button>
-                <span class="navbar-text small d-done d-md-inline">
+                <span class="navbar-text small d-none d-md-inline">
                     跨境电商业务 v1.0
                 </span>
             </div>
@@ -33,6 +33,7 @@
      <div class="container-fluid mt-3">
         <div class="row">
             <div class="col-12">
+
                 <!-- ==================== 筛选区域 ==================== -->
                 <div class="card mb-3 shadow-sm">
                     <div class="card-body py-2">
@@ -49,7 +50,7 @@
                                 </select>
                             </div>
                             <div class="col-md-2 col-sm-4">
-                                <label class="form-label" small mb-1>跟进状态</label>
+                                <label class="form-label small mb-1" >跟进状态</label>
                                 <select class="form-select form-select-sm" id="filterStatus">
                                     <option value="">全部</option>
                                     <option value="潜在客户">潜在客户</option>
@@ -65,9 +66,15 @@
                                 placeholder="如：中国">
                             </div>
                             <div class="col-md-2 col-sm-6">
+                                <button type="button" class="btn btn-outline-secondary btn-sm w-100" onclick="searchCustomers()">
+                                    <i class="bi bi-search"></i> 搜索
+                                </button>
+                            </div>
+                            <div class="col-md-2 col-sm-6">
                                 <button type="button" class="btn btn-outline-secondary btn-sm w-100" onclick="resetFilter()">
                                     <i class="bi bi-arrow-clockwise"></i> 重置
                                 </button>
+
                             </div>
                         </form>
                     </div>
@@ -146,7 +153,7 @@
         <div class="modal-dialog modal-lg modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header bg-primary text-white">
-                    <h5>
+                    <h5 class="modal-title" id="modalTitle">
                         <i class="bi bi-person-plus"></i> 新增客户
                     </h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
@@ -160,9 +167,14 @@
                             <i class="bi bi-info-circle"></i> 基本信息
                          </h6>
                          <div class="row g-2">
+                             <div class="col-md-6">
+                                 <label class="form-label">公司名称 <span class="text-danger">*</span></label>
+                                 <input type="text" class="form-control" id="companyName"  required
+                                 placeholder="请输入公司/店铺名称">
+                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">联系人 <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="companyName" required
+                                <input type="text" class="form-control" id="contactPerson" required
                                 placeholder="请输入联系人姓名">
                             </div>
                             <div class="col-md-4">
@@ -234,7 +246,7 @@
                             <div class="row g-2">
                                 <div class="col-md-6">
                                     <label class="form-label">服务需求</label>
-                                    <textarea class="form-label" id="serviceNeeds" rows="3"
+                                    <textarea class="form-contrl" id="serviceNeeds" rows="3"
                                     placeholder="描述客户的具体服务需求..."></textarea>
                                 </div>
                                 <div class="col-md-6">
@@ -248,7 +260,7 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
                     <button type="button" class="btn btn-primary" onclick="submitForm()">
-                        <i class="bit-chek-lg"></i> 保存
+                        <i class="bi bi-check-lg"></i> 保存
                     </button>
                 </div>
             </div>

@@ -63,7 +63,7 @@ public class CustomerServiceImpl implements CustomerService {
     public void delete(Long id) {
         Customer existing = customerMapper.selectById(id);
         if (existing == null) {
-            throw new RuntimeException("客户不存在: id" + id);
+            throw new RuntimeException("客户不存在: id=" + id);
         }
         //MyBatis-Plus 的逻辑删除: 实际执行 UPDATE SET is_deleted=1
         customerMapper.deleteById(id);

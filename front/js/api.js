@@ -7,15 +7,15 @@
  */
 
 const API = (() => {
-        // ==================== 配置 ====================
+    // ==================== 配置 ====================
 
-        /** 后端API基础地址（开发环境） */
-        const BASE_URL = 'http://localhost:8080';
+    /** 后端API基础地址（开发环境） */
+    const BASE_URL = 'http://localhost:8080';
 
-        /** 请求超时时间（毫秒） */
-        const TIMEOUT = 15000;
+    /** 请求超时时间（毫秒） */
+    const TIMEOUT = 15000;
 
-            // ==================== 核心请求方法 ====================
+    // ==================== 核心请求方法 ====================
 
     /**
      * 发起 HTTP 请求
@@ -25,7 +25,7 @@ const API = (() => {
      * @param {object} data    - 请求体（GET请求忽略）
      * @returns {Promise}      - 解析后的响应数据
      */
-    async function request(url,method = 'GET' , data = null) {
+    async function request(url, method = 'GET', data = null) {
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), TIMEOUT);
 
@@ -33,11 +33,11 @@ const API = (() => {
             method: method,
             signal: controller.signal,
             headers: {
-                'Content-Type':'application/json',
+                'Content-Type': 'application/json',
             },
         };
 
-        //GET 请求不带 body
+        // GET 请求不带 body
         if (data && method !== 'GET') {
             options.body = JSON.stringify(data);
         }
@@ -46,8 +46,8 @@ const API = (() => {
             const response = await fetch(BASE_URL + url, options);
             clearTimeout(timeoutId);
 
-            if(!response.ok) {
-                // HTTP 错误的状态码 (非200-299)
+            if (!response.ok) {
+                // HTTP 错误状态码（非200-299）
                 const errorBody = await response.text();
                 let errorMsg;
                 try {
@@ -61,6 +61,7 @@ const API = (() => {
 
             const result = await response.json();
             return result;
+
         } catch (error) {
             clearTimeout(timeoutId);
 
@@ -75,6 +76,7 @@ const API = (() => {
     }
 
     // ==================== 客户 API ====================
+
     return {
         /**
          * 新增客户
@@ -135,3 +137,5 @@ const API = (() => {
         getTypes: () => request('/api/customers/types'),
     };
 })();
+
+

@@ -91,7 +91,7 @@ public class CustomerController {
      * @param customer 要更新的字段（传什么更新什么）
      * @return 更新后的客户完整信息
      */
-    @PostMapping("/{id}")
+    @PutMapping("/{id}")
     public Result<Customer> update(@PathVariable @NotNull Long id,
                                    @RequestBody Customer customer) {
         Customer updated = customerService.update(id,customer);

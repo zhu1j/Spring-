@@ -8,6 +8,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
  * @author zhujie
  */
 @Slf4j
+@RestControllerAdvice
 public class GlobalExceptionHandler {
     /**
      * 参数校验异常 - @Valid 校验请求体失败时触发

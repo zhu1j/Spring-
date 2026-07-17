@@ -4,9 +4,16 @@
 
 /* ---- 全局 ---- */
 body {
+    padding-right: 0 !important; /* 不让补偿生效*/
     background-color: #f5f7fa;
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', "PingFang SC",
      "Microsoft YaHei", 'Helvetica Neue', sans-serif;
+}
+body.modal-open {
+    overflow: visible !important;   /* ← 加这个，不让 Bootstrap 改滚动条 */
+}
+html {
+    overflow-y: scroll;
 }
 
 /* ---- 导航栏 ---- */

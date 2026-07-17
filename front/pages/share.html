@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>共享浏览 - 客户资料</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.bootcdn.net/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        .share-notice {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        .share-notice i {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container py-4">
+    <!-- 标题区域 -->
+    <div class="share-notice">
+        <i class="bi bi-share"></i>
+        <h4>客户信息共享浏览</h4>
+        <p class="mb-0">此页面仅展示已签约客户的基本信息，敏感联系方式已做保护处理。</p>
+    </div>
+
+    <!-- 搜索栏 -->
+    <div class="card mb-3 shadow-sm">
+        <div class="card-body py-2">
+            <div class="row g-2">
+                <div class="col-md-8">
+                    <input type="text" class="form-control" id="shareKeyword"
+                           placeholder="搜索公司名称或国家..." onkeyup="if(event.key==='Enter') searchShare()">
+                </div>
+                <div class="col-md-2">
+                    <button class="btn btn-primary w-100" onclick="searchShare()">
+                        <i class="bi bi-search"></i> 搜索
+                    </button>
+                </div>
+                <div class="col-md-2">
+                    <button class="btn btn-outline-secondary w-100" onclick="location.reload()">
+                        <i class="bi bi-arrow-clockwise"></i> 重置
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 统计卡片 -->
+    <div class="row mb-3" id="statsCards"></div>
+
+    <!-- 客户列表 -->
+    <div class="card shadow-sm">
+        <div class="card-header bg-white d-flex justify-content-between align-items-center">
+            <span class="fw-bold"><i class="bi bi-building"></i> 合作客户名录</span>
+            <span class="badge bg-success" id="shareTotal">0 家</span>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                    <tr>
+                        <th>#</th>
+                        <th>公司名称</th>
+                        <th>联系人</th>
+                        <th>国家/地区</th>
+                        <th>客户类型</th>
+                        <th>签约时间</th>
+                    </tr>
+                    </thead>
+                    <tbody id="shareTableBody">
+                    <tr>
+                        <td colspan="6" class="text-center text-muted py-5">
+                            <i class="bi bi-hourglass-split" style="font-size: 3rem;"></i>
+                            <p class="mt-2">正在加载...</p>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- 分页 -->
+    <div class="d-flex justify-content-center mt-3">
+        <nav>
+            <ul class="pagination pagination-sm" id="sharePagination"></ul>
+        </nav>
+    </div>
+</div>
+
+<script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+<script>
+    // ==================== 共享浏览专用逻辑 ====================
+    const BASE_URL = 'http://localhost:8080';
+    let currentPage = 1;
+    const pageSize = 12;
+
+    // 页面加载
+    document.addEventListener('DOMContentLoaded', () => searchShare());
+
+    async function searchShare(pageNum = 1) {
+        currentPage = pageNum;
+        const keyword = document.getElementById('shareKeyword').value.trim();
+
+        try {
+            const res = await fetch(`${BASE_URL}/api/customers/share`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    pageNum: currentPage,
+                    pageSize: pageSize,
+                    keyword: keyword,
+                }),
+            });
+            const result = await res.json();
+
+            if (result.code === 200 && result.data) {
+                renderShareTable(result.data.records);
+                renderSharePagination(result.data.total, Math.ceil(result.data.total / pageSize));
+                renderStats(result.data.records);
+            }
+        } catch (e) {
+            document.getElementById('shareTableBody').innerHTML = `
+                <tr><td colspan="6" class="text-center text-muted py-5">
+                    <i class="bi bi-exclamation-triangle" style="font-size: 3rem;"></i>
+                    <p class="mt-2">加载失败: ${e.message}</p>
+                </td></tr>`;
+        }
+    }
+
+    function renderShareTable(records) {
+        const tbody = document.getElementById('shareTableBody');
+        document.getElementById('shareTotal').textContent = (records ? records.length : 0) + ' 家';
+
+        if (!records || records.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="6" class="text-center text-muted py-5">
+                <i class="bi bi-inbox" style="font-size: 3rem;"></i>
+                <p class="mt-2">暂无已签约客户</p></td></tr>`;
+            return;
+        }
+
+        tbody.innerHTML = records.map((c, i) => `
+            <tr>
+                <td>${(currentPage - 1) * pageSize + i + 1}</td>
+                <td><span class="fw-bold">${esc(c.companyName)}</span></td>
+                <td>${esc(c.contactPerson)}</td>
+                <td>${esc(c.country || '-')}</td>
+                <td><span class="type-badge">${esc(c.customerType)}</span></td>
+                <td class="text-muted small">${esc(c.createdAt || '-')}</td>
+            </tr>
+        `).join('');
+    }
+
+    function renderSharePagination(total, totalPages) {
+        const pagination = document.getElementById('sharePagination');
+        if (totalPages <= 1) { pagination.innerHTML = ''; return; }
+
+        let html = '';
+        html += `<li class="page-item ${currentPage <= 1 ? 'disabled' : ''}">
+                    <a class="page-link" onclick="searchShare(${currentPage - 1})">«</a></li>`;
+
+        let start = Math.max(1, currentPage - 3);
+        let end = Math.min(totalPages, currentPage + 3);
+        if (end - start < 6) {
+            if (start === 1) end = Math.min(totalPages, start + 6);
+            else start = Math.max(1, end - 6);
+        }
+
+        for (let i = start; i <= end; i++) {
+            html += `<li class="page-item ${i === currentPage ? 'active' : ''}">
+                        <a class="page-link" onclick="searchShare(${i})">${i}</a></li>`;
+        }
+
+        html += `<li class="page-item ${currentPage >= totalPages ? 'disabled' : ''}">
+                    <a class="page-link" onclick="searchShare(${currentPage + 1})">»</a></li>`;
+
+        pagination.innerHTML = html;
+    }
+
+    function renderStats(records) {
+        if (!records) return;
+        const typeCount = {};
+        const countryCount = {};
+        records.forEach(c => {
+            typeCount[c.customerType] = (typeCount[c.customerType] || 0) + 1;
+            countryCount[c.country] = (countryCount[c.country] || 0) + 1;
+        });
+
+        const typeStr = Object.entries(typeCount).slice(0, 3)
+            .map(([k, v]) => `<span class="badge bg-light text-dark me-1">${esc(k)}: ${v}</span>`).join('');
+        const countryStr = Object.entries(countryCount).slice(0, 3)
+            .map(([k, v]) => `<span class="badge bg-light text-dark me-1">${esc(k)}: ${v}</span>`).join('');
+
+        document.getElementById('statsCards').innerHTML = `
+            <div class="col-md-6">
+                <div class="card border-0 bg-light"><div class="card-body py-2 small">
+                    <i class="bi bi-tag text-primary me-1"></i> 业务类型：${typeStr || '—'}
+                </div></div>
+            </div>
+            <div class="col-md-6">
+                <div class="card border-0 bg-light"><div class="card-body py-2 small">
+                    <i class="bi bi-globe2 text-success me-1"></i> 覆盖区域：${countryStr || '—'}
+                </div></div>
+            </div>`;
+    }
+
+    function esc(str) {
+        if (!str) return '';
+        const div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
+    }
+</script>
+</body>
+</html>

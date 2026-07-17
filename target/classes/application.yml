@@ -47,8 +47,7 @@ mybatis-plus:
       logic-not-delete-value: 0
       id-type: auto
 
-
-  logging:
-    level:
-      com.crm:debug
-      org.springframework:info
+logging:
+  level:
+    com.crm: debug
+    org.springframework: info
